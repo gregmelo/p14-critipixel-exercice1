@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-9 d-flex flex-column gap-4">
+                {{ component('Sorting', { list: list }) }}
+                {{ component('Info', { info: list.pagination.info }) }}
+                <div class="video-games-list d-flex flex-column gap-5">
+                    {% for video_game in list %}
+                        {{ component('Card', { video_game: video_game }) }}
+                    {% endfor %}
+                </div>
+                {% if list.pagination|length > 1 %}
+                    {{ component('Pagination', { pagination: list.pagination }) }}
+                {% endif %}
+            </div>
+            <div class="col-3">
+                {{ component('Filter', { list: list }) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

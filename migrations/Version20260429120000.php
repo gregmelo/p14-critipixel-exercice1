@@ -27,7 +27,7 @@ final class Version20260429120000 extends AbstractMigration
         $this->addSql('CREATE UNIQUE INDEX UNIQ_8D93D649F85E0677 ON "user" (username)');
         $this->addSql('CREATE UNIQUE INDEX UNIQ_8D93D649E7927C74 ON "user" (email)');
 
-        $this->addSql('CREATE TABLE video_game (id SERIAL NOT NULL, title VARCHAR(100) NOT NULL, image_name VARCHAR(255) DEFAULT NULL, image_size INT DEFAULT NULL, slug VARCHAR(255) NOT NULL, description TEXT NOT NULL, release_date DATE NOT NULL, updated_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, test TEXT DEFAULT NULL, rating INT DEFAULT NULL, average_rating INT DEFAULT NULL, number_of_one INT NOT NULL, number_of_two INT NOT NULL, number_of_three INT NOT NULL, number_of_four INT NOT NULL, number_of_five INT NOT NULL, PRIMARY KEY(id))');
+        $this->addSql('CREATE TABLE video_game (id SERIAL NOT NULL, title VARCHAR(100) NOT NULL, image_name VARCHAR(255) DEFAULT NULL, image_size INT DEFAULT NULL, slug VARCHAR(255) NOT NULL, description TEXT NOT NULL, release_date DATE NOT NULL, updated_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, test TEXT DEFAULT NULL, rating INT DEFAULT NULL, average_rating INT DEFAULT NULL, number_of_ratings_per_value_number_of_one INT NOT NULL, number_of_ratings_per_value_number_of_two INT NOT NULL, number_of_ratings_per_value_number_of_three INT NOT NULL, number_of_ratings_per_value_number_of_four INT NOT NULL, number_of_ratings_per_value_number_of_five INT NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE UNIQUE INDEX UNIQ_24BC6C50989D9B62 ON video_game (slug)');
         $this->addSql("COMMENT ON COLUMN video_game.release_date IS '(DC2Type:date_immutable)'");
         $this->addSql("COMMENT ON COLUMN video_game.updated_at IS '(DC2Type:datetime_immutable)'");

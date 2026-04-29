@@ -46,6 +46,9 @@ jobs:
       - name: Installation des dépendances Composer
         run: composer install --no-interaction --prefer-dist --optimize-autoloader
 
+      - name: Compilation des assets SASS
+        run: php bin/console sass:build
+
       - name: Préparation de la base de données de test
         run: |
           php bin/console doctrine:database:create --env=test --if-not-exists

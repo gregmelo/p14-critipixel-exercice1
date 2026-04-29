@@ -1,0 +1,66 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  ci:
+    name: Tests & Qualité
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: criti_pixel_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout du code
+        uses: actions/checkout@v4
+
+      - name: Configuration de PHP 8.2
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: pgsql, intl, mbstring, ctype, iconv
+          coverage: none
+
+      - name: Cache Composer
+        uses: actions/cache@v4
+        with:
+          path: vendor
+          key: composer-${{ hashFiles('composer.lock') }}
+
+      - name: Installation des dépendances Composer
+        run: composer install --no-interaction --prefer-dist --optimize-autoloader
+
+      - name: Préparation de la base de données de test
+        run: |
+          php bin/console doctrine:database:create --env=test --if-not-exists
+          php bin/console doctrine:migrations:migrate --env=test --no-interaction
+          php bin/console doctrine:fixtures:load --env=test --no-interaction
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@127.0.0.1:5432/criti_pixel_test?serverVersion=16&charset=utf8
+
+      - name: Exécution des tests PHPUnit
+        run: php bin/phpunit
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@127.0.0.1:5432/criti_pixel_test?serverVersion=16&charset=utf8
+
+      - name: Analyse statique PHPStan
+        run: vendor/bin/phpstan analyse --memory-limit=512M --no-progress
+
+      - name: Vérification du style PHP CS Fixer
+        run: vendor/bin/php-cs-fixer fix --dry-run --diff --config=.php-cs-fixer.dist.php

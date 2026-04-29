@@ -10,7 +10,7 @@ final readonly class Page
         public int $page,
         public bool $active,
         public string $label,
-        public string $url
+        public string $url,
     ) {
     }
 }

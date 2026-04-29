@@ -10,7 +10,7 @@ final readonly class Info
         public int $count,
         public int $from,
         public int $to,
-        public int $total
+        public int $total,
     ) {
     }
 }

@@ -46,9 +46,10 @@ class Tag
         return $this->name;
     }
 
-    public function setName(string $name): Tag
+    public function setName(string $name): self
     {
         $this->name = $name;
+
         return $this;
     }
 }

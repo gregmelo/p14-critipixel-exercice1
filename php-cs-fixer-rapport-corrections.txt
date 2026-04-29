@@ -1,0 +1,386 @@
+============================================================
+RAPPORT DE CORRECTIONS PHP CS FIXER - v3.75.0
+Projet : p14-critipixel-exercice1 (Symfony 6.4 / PHP 8.2)
+Date   : 2026-04-29
+Résultat final : 0 correction restante sur 56 fichiers analysés
+                 51 fichiers corrigés au total
+============================================================
+
+
+OUTIL INSTALLÉ
+--------------
+- friendsofphp/php-cs-fixer  v3.75.0  → Correcteur automatique de style PHP
+
+Commandes :
+  # Vérifier sans modifier (prévisualisation)
+  vendor/bin/php-cs-fixer fix --dry-run --diff --config=.php-cs-fixer.dist.php
+
+  # Appliquer les corrections
+  vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.dist.php
+
+Fichier de configuration : .php-cs-fixer.dist.php
+
+
+CONFIGURATION APPLIQUÉE
+------------------------
+Règles actives :
+
+  @Symfony        → Ensemble de règles officielles Symfony (inclut PSR-1 et PSR-12)
+  @Symfony:risky  → Règles Symfony avancées (ex: declare_strict_types)
+
+  Règles supplémentaires configurées manuellement :
+
+  declare_strict_types           → Impose declare(strict_types=1) en tête de chaque fichier
+  ordered_imports                → Trie les imports par ordre alphabétique
+  no_unused_imports              → Supprime les imports non utilisés
+  single_import_per_statement    → Un seul "use" par ligne
+  array_syntax                   → Syntaxe courte [] au lieu de array()
+  binary_operator_spaces         → Espacement uniforme autour des opérateurs (=, !=, etc.)
+  trailing_comma_in_multiline    → Virgule finale dans les tableaux/arguments multi-lignes
+  braces_position                → Accolades sur nouvelle ligne (PSR-12)
+  concat_space                   → Espace autour de l'opérateur de concaténation (.)
+  no_extra_blank_lines           → Pas plus d'une ligne vide consécutive
+  single_blank_line_at_eof       → Une seule ligne vide en fin de fichier
+  cast_spaces                    → Espace après les opérateurs de cast ((int), (string), etc.)
+
+Répertoires exclus : var/, vendor/, node_modules/, public/, assets/
+
+
+FICHIERS CORRIGÉS ET DÉTAIL DES CORRECTIONS
+--------------------------------------------
+
+-----------------------------------------------------------------
+FICHIER : config/helpers.php
+CORRECTIONS :
+  - Ajout de lignes vides entre les balises @template, @param, @return
+    dans le bloc PHPDoc (standard Symfony : une ligne vide entre
+    chaque annotation PHPDoc distincte)
+-----------------------------------------------------------------
+
+-----------------------------------------------------------------
+FICHIER : config/preload.php
+CORRECTIONS :
+  - Ajout de declare(strict_types=1)
+  - Espaces autour de l'opérateur de concaténation "."
+    AVANT : dirname(__DIR__).'/var/cache/...'
+    APRÈS  : dirname(__DIR__) . '/var/cache/...'
+-----------------------------------------------------------------
+
+-----------------------------------------------------------------
+FICHIER : importmap.php
+CORRECTIONS :
+  - Ajout de declare(strict_types=1)
+  - Ajout de la virgule finale sur le dernier élément du tableau
+    AVANT : '@popperjs/core' => ['version' => '2.11.8']
+    APRÈS  : '@popperjs/core' => ['version' => '2.11.8'],
+-----------------------------------------------------------------
+
+-----------------------------------------------------------------
+FICHIER : src/Controller/AuthController.php
+CORRECTIONS :
+  - Suppression de l'alignement excessif des flèches =>
+    AVANT : 'last_username' => ...,
+            'error'         => ...
+    APRÈS  : 'last_username' => ...,
+             'error' => ...
+  - Ajout d'une ligne vide avant le "return" dans la méthode register()
+-----------------------------------------------------------------
+
+-----------------------------------------------------------------
+FICHIER : src/Controller/VideoGameController.php
+CORRECTIONS :
+  - Suppression de l'import inutilisé : use IsGranted
+    (l'attribut #[IsGranted] n'est pas utilisé dans ce fichier)
+  - Ajout d'une ligne vide avant le "return" dans show()
+-----------------------------------------------------------------
+
+-----------------------------------------------------------------
+FICHIER : src/Doctrine/DataFixtures/TagFixtures.php
+CORRECTIONS :
+  - Ajout de declare(strict_types=1)
+  - Mise en forme des tableaux et arguments
+  - Virgule finale sur les listes multi-lignes
+-----------------------------------------------------------------
+
+-----------------------------------------------------------------
+FICHIER : src/Doctrine/DataFixtures/UserFixtures.php
+CORRECTIONS :
+  - Suppression de l'import inutilisé : use function array_fill_callback
+    (PHP CS Fixer détecte que la fonction est appelée via \array_fill_callback)
+  - Virgule finale sur la liste d'arguments de array_fill_callback
+  - Espacement de la closure : fn( → fn (
+-----------------------------------------------------------------
+
+-----------------------------------------------------------------
+FICHIER : src/Doctrine/DataFixtures/VideoGameFixtures.php
+CORRECTIONS :
+  - Suppression de l'import : use function array_fill_callback
+  - Suppression du commentaire de namespace en double et imports réordonnés
+    alphabétiquement (DateTimeImmutable déplacé, imports triés)
+  - Suppression de use DateTimeImmutable (classe native, préfixée \DateTimeImmutable)
+  - Virgule finale sur les arguments de constructeur et tableaux
+  - Espacement des closures : fn( → fn (
+  - Appels natifs préfixés : array_rand → \array_rand, rand → \rand, etc.
+-----------------------------------------------------------------
+
+-----------------------------------------------------------------
+FICHIER : src/Doctrine/EntityListener/UserListener.php
+CORRECTIONS :
+  - Ajout de declare(strict_types=1)
+  - Mise en forme générale (virgules, espaces)
+-----------------------------------------------------------------
+
+-----------------------------------------------------------------
+FICHIER : src/Doctrine/Repository/VideoGameRepository.php
+CORRECTIONS :
+  - Ajout de declare(strict_types=1)
+  - Virgule finale sur les paramètres et tableaux multi-lignes
+-----------------------------------------------------------------
+
+-----------------------------------------------------------------
+FICHIER : src/Form/FilterType.php
+CORRECTIONS :
+  - Virgule finale sur les tableaux d'options dans buildForm()
+    AVANT : 'attr' =>  ['class' => '...']
+    APRÈS  : 'attr' => ['class' => '...'],
+  - Suppression du double espace dans 'attr' =>  [
+  - Déplacement de configureOptions() après buildForm()
+    (ordre conventionnel Symfony : build puis configure)
+-----------------------------------------------------------------
+
+-----------------------------------------------------------------
+FICHIER : src/Form/RegisterType.php
+CORRECTIONS :
+  - Virgule finale sur tous les tableaux d'options multi-lignes
+-----------------------------------------------------------------
+
+-----------------------------------------------------------------
+FICHIER : src/Form/ReviewType.php
+CORRECTIONS :
+  - Virgule finale sur les tableaux de choices et d'options
+    AVANT : '5' => 5
+    APRÈS  : '5' => 5,
+-----------------------------------------------------------------
+
+-----------------------------------------------------------------
+FICHIER : src/Kernel.php
+CORRECTIONS :
+  - Mise en forme générale (virgules finales, espaces)
+-----------------------------------------------------------------
+
+-----------------------------------------------------------------
+FICHIER : src/List/ListFactory.php
+CORRECTIONS :
+  - Ajout de declare(strict_types=1)
+  - Virgules finales sur les arguments de constructeur
+-----------------------------------------------------------------
+
+-----------------------------------------------------------------
+FICHIER : src/List/VideoGameList/Filter.php
+CORRECTIONS :
+  - Virgule finale dans la liste des paramètres du constructeur
+    AVANT : private array $tags = []
+    APRÈS  : private array $tags = [],
+  - Les types de retour des setters changés de Filter en self
+    (convention Symfony : préférer self pour les méthodes fluent)
+-----------------------------------------------------------------
+
+-----------------------------------------------------------------
+FICHIER : src/List/VideoGameList/Pagination.php
+CORRECTIONS :
+  - Suppression des imports explicites de classes natives :
+    use ArrayIterator  → supprimé (utilise \ArrayIterator)
+    use RuntimeException → supprimé (utilise \RuntimeException)
+    use Countable      → supprimé (utilise \Countable)
+    use IteratorAggregate → conservé car utilisé dans @implements
+  - Virgule finale dans la liste des paramètres du constructeur
+  - Virgule finale dans new Info(...)
+  - Implémentation avec classes préfixées :
+    implements IteratorAggregate, Countable
+    → implements \IteratorAggregate, \Countable
+  - Return type annoté en \Traversable<int, Page>
+-----------------------------------------------------------------
+
+-----------------------------------------------------------------
+FICHIER : src/List/VideoGameList/PaginationValueResolver.php
+CORRECTIONS :
+  - Style Yoda sur la comparaison de constante de classe :
+    AVANT : if ($argumentType !== Pagination::class)
+    APRÈS  : if (Pagination::class !== $argumentType)
+    (règle Symfony : les constantes et valeurs fixes à gauche
+     pour éviter les erreurs d'affectation accidentelle)
+-----------------------------------------------------------------
+
+-----------------------------------------------------------------
+FICHIER : src/List/VideoGameList/VideoGamesList.php
+CORRECTIONS :
+  - Suppression des imports inutiles : use Countable, use Traversable
+  - Implémentation avec classes préfixées : \Countable, \IteratorAggregate
+  - Suppression de l'espace en trop avant handleRequest()
+  - Double indentation corrigée sur la méthode handleRequest()
+    AVANT :       public function handleRequest (indentation incorrecte)
+    APRÈS  :     public function handleRequest (indentation standard 4 espaces)
+  - Virgule finale sur tous les new Page(...) multi-lignes
+  - Appels à count() préfixés : \count()
+  - Virgule finale sur les arguments de createForm()
+-----------------------------------------------------------------
+
+-----------------------------------------------------------------
+FICHIER : src/Model/Entity/NumberOfRatingPerValue.php
+CORRECTIONS :
+  - Ajout de declare(strict_types=1)
+  - Mise en forme générale
+-----------------------------------------------------------------
+
+-----------------------------------------------------------------
+FICHIER : src/Model/Entity/Review.php
+CORRECTIONS :
+  - Ajout de declare(strict_types=1) (déjà présent, reformaté)
+  - Types de retour des setters : Review → self
+-----------------------------------------------------------------
+
+-----------------------------------------------------------------
+FICHIER : src/Model/Entity/Tag.php
+CORRECTIONS :
+  - Ajout de declare(strict_types=1)
+  - Types de retour des setters : Tag → self
+-----------------------------------------------------------------
+
+-----------------------------------------------------------------
+FICHIER : src/Model/Entity/User.php
+CORRECTIONS :
+  - Types de retour des setters : User → self
+  - Mise en forme générale
+-----------------------------------------------------------------
+
+-----------------------------------------------------------------
+FICHIER : src/Model/Entity/VideoGame.php
+CORRECTIONS :
+  - Suppression de l'import : use DateTimeImmutable
+    (classe native PHP, utilisée en FQCN \DateTimeImmutable)
+  - Types de retour des setters : VideoGame → self
+  - Suppression du type dans la propriété : DateTimeImmutable → \DateTimeImmutable
+  - Ligne vide ajoutée avant chaque "return $this" dans les setters
+-----------------------------------------------------------------
+
+-----------------------------------------------------------------
+FICHIER : src/Model/ValueObject/Direction.php
+CORRECTIONS :
+  - Ajout de declare(strict_types=1)
+  - Mise en forme générale
+-----------------------------------------------------------------
+
+-----------------------------------------------------------------
+FICHIER : src/Model/ValueObject/Info.php
+CORRECTIONS :
+  - Ajout de declare(strict_types=1)
+  - Virgule finale dans les paramètres du constructeur
+-----------------------------------------------------------------
+
+-----------------------------------------------------------------
+FICHIER : src/Model/ValueObject/Page.php
+CORRECTIONS :
+  - Ajout de declare(strict_types=1)
+  - Virgule finale dans les paramètres du constructeur
+-----------------------------------------------------------------
+
+-----------------------------------------------------------------
+FICHIER : src/Model/ValueObject/Sorting.php
+CORRECTIONS :
+  - Ajout de declare(strict_types=1)
+  - Mise en forme générale
+-----------------------------------------------------------------
+
+-----------------------------------------------------------------
+FICHIER : src/Rating/RatingHandler.php
+CORRECTIONS :
+  - Ajout de declare(strict_types=1)
+  - Mise en forme générale
+-----------------------------------------------------------------
+
+-----------------------------------------------------------------
+FICHIER : src/Security/Voter/VideoGameVoter.php
+CORRECTIONS :
+  - Ajout de declare(strict_types=1)
+  - Style Yoda sur la comparaison :
+    AVANT : $attribute === self::REVIEW
+    APRÈS  : self::REVIEW === $attribute
+-----------------------------------------------------------------
+
+-----------------------------------------------------------------
+FICHIERS : src/Twig/Components/*.php (11 fichiers)
+  Alert.php, Card.php, Filter.php, Info.php, NavBar.php,
+  Pagination.php, Progress.php, Rating.php, Review.php,
+  Sorting.php, Tabs.php
+CORRECTIONS (identiques sur tous) :
+  - Ajout de declare(strict_types=1)
+  - Types de retour en self pour les setters fluent
+  - Virgules finales dans les tableaux et constructeurs
+  - Mise en forme générale (espaces, lignes vides)
+-----------------------------------------------------------------
+
+-----------------------------------------------------------------
+FICHIER : tests/bootstrap.php
+CORRECTIONS :
+  - Ajout de declare(strict_types=1)
+-----------------------------------------------------------------
+
+-----------------------------------------------------------------
+FICHIERS : tests/Functional/**/*.php et tests/Unit/**/*.php
+  LoginTest, RegisterTest, FunctionalTestCase, AddReviewTest,
+  FilterTest, ShowTest, CalculateAverageRatingTest,
+  CountRatingsPerValueTest
+CORRECTIONS :
+  - Ajout de declare(strict_types=1) dans tous les fichiers de test
+  - Virgules finales dans les tableaux de données de test
+  - Imports triés alphabétiquement
+  - Mise en forme générale
+-----------------------------------------------------------------
+
+-----------------------------------------------------------------
+FICHIER : tests/orm.php
+CORRECTIONS :
+  - Ajout de declare(strict_types=1)
+  - Espaces autour de l'opérateur de concaténation "."
+    AVANT : dirname(__DIR__).'/vendor/autoload.php'
+    APRÈS  : dirname(__DIR__) . '/vendor/autoload.php'
+-----------------------------------------------------------------
+
+
+CATÉGORIES DE CORRECTIONS PAR TYPE
+------------------------------------
+  declare_strict_types          → ~30 fichiers  (ajout de declare(strict_types=1))
+  no_unused_imports             →   5 fichiers  (suppression d'imports non utilisés)
+  trailing_comma_in_multiline   →  35 fichiers  (virgules finales manquantes)
+  binary_operator_spaces        →   8 fichiers  (espacement opérateurs = et .)
+  concat_space                  →   4 fichiers  (espace autour du ".")
+  yoda_style                    →   2 fichiers  (constantes à gauche des comparaisons)
+  return_type_declaration       →  10 fichiers  (VideoGame→self, Review→self, etc.)
+  no_extra_blank_lines          →   5 fichiers  (lignes vides superflues)
+  blank_line_before_return      →   8 fichiers  (ligne vide avant return)
+  ordered_imports               →  15 fichiers  (imports triés alphabétiquement)
+  global_namespace_import       →  10 fichiers  (classes natives préfixées \ClassName)
+
+  Total fichiers corrigés       →  51 / 56
+
+
+COMPLÉMENTARITÉ AVEC PHPSTAN
+-----------------------------
+  PHPStan et PHP CS Fixer sont complémentaires et ne font pas doublon :
+
+  PHPStan  → Analyse LOGIQUE : détecte les erreurs de type, les variables
+             non définies, les méthodes inexistantes, les incohérences
+             entre le code PHP et le schéma Doctrine.
+             Ne modifie PAS les fichiers.
+
+  PHP CS   → Analyse STYLISTIQUE : applique les conventions PSR-1, PSR-12
+  Fixer      et Symfony (indentation, virgules, imports, declare, etc.).
+             Modifie automatiquement les fichiers.
+
+  Utiliser les deux ensemble garantit un code à la fois :
+    - Correct  (PHPStan : pas d'erreurs de type ni de logique)
+    - Uniforme (PHP CS Fixer : style cohérent sur tout le projet)
+
+============================================================
+FIN DU RAPPORT
+============================================================

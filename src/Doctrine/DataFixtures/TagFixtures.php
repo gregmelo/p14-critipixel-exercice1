@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Doctrine\DataFixtures;
 
 use App\Model\Entity\Tag;
@@ -21,7 +23,7 @@ final class TagFixtures extends Fixture
     public function load(ObjectManager $manager): void
     {
         foreach (self::TAGS as $index => $name) {
-            $tag = (new Tag)->setName($name);
+            $tag = (new Tag())->setName($name);
             $manager->persist($tag);
 
             // Stocke une référence pour permettre à VideoGameFixtures de récupérer ce tag

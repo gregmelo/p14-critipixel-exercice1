@@ -33,17 +33,17 @@ final class VideoGameRepository extends ServiceEntityRepository
             ->setMaxResults($pagination->getLimit())
             ->orderBy(
                 $pagination->getSorting()->getSql(),
-                $pagination->getDirection()->getSql()
+                $pagination->getDirection()->getSql(),
             );
 
-        if ($filter->getSearch() !== null) {
+        if (null !== $filter->getSearch()) {
             $queryBuilder
                 ->andWhere(
                     $queryBuilder->expr()->orX(
                         $queryBuilder->expr()->like('vg.title', ':search'),
                         $queryBuilder->expr()->like('vg.description', ':search'),
                         $queryBuilder->expr()->like('vg.test', ':search'),
-                    )
+                    ),
                 )
                 ->setParameter('search', '%' . $filter->getSearch() . '%');
         }
@@ -61,7 +61,7 @@ final class VideoGameRepository extends ServiceEntityRepository
             $queryBuilder
                 ->andWhere($queryBuilder->expr()->in('vg.id', $subQuery->getDQL()))
                 ->setParameter('tags', $filter->getTags())
-                ->setParameter('tagCount', count($filter->getTags()));
+                ->setParameter('tagCount', \count($filter->getTags()));
         }
 
         return new Paginator($queryBuilder, fetchJoinCollection: true);

@@ -17,7 +17,7 @@ enum Sorting: string
 
     public function getSql(): string
     {
-        return match($this) {
+        return match ($this) {
             self::ReleaseDate => 'vg.releaseDate',
             self::Title => 'vg.title',
             self::Rating => 'vg.rating',

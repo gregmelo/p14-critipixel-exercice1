@@ -58,7 +58,7 @@ final class AddReviewTest extends FunctionalTestCase
 
         // submitForm() cherche le bouton "Poster" dans le DOM et soumet le formulaire
         $this->client->submitForm('Poster', [
-            'review[rating]'  => 3,
+            'review[rating]' => 3,
             'review[comment]' => 'Super jeu !',
         ]);
 

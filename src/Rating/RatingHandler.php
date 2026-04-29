@@ -11,26 +11,27 @@ final readonly class RatingHandler implements CalculateAverageRating, CountRatin
 {
     public function calculateAverage(VideoGame $videoGame): void
     {
-        if (count($videoGame->getReviews()) === 0) {
+        if (0 === \count($videoGame->getReviews())) {
             $videoGame->setAverageRating(null);
+
             return;
         }
 
         $ratingsSum = array_sum(
             array_map(
                 static fn (Review $review): int => $review->getRating(),
-                $videoGame->getReviews()->toArray()
-            )
+                $videoGame->getReviews()->toArray(),
+            ),
         );
 
-        $videoGame->setAverageRating((int) ceil($ratingsSum/ count($videoGame->getReviews())));
+        $videoGame->setAverageRating((int) ceil($ratingsSum / \count($videoGame->getReviews())));
     }
 
     public function countRatingsPerValue(VideoGame $videoGame): void
     {
         $videoGame->getNumberOfRatingsPerValue()->clear();
 
-        if (count($videoGame->getReviews()) === 0) {
+        if (0 === \count($videoGame->getReviews())) {
             return;
         }
 

@@ -25,7 +25,7 @@ final readonly class ListFactory
             $this->urlGenerator,
             $this->formFactory,
             $this->videoGameRepository,
-            $pagination
+            $pagination,
         );
     }
 }

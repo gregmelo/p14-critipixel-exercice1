@@ -1,22 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Doctrine\DataFixtures;
 
+use App\Model\Entity\Review;
+use App\Model\Entity\Tag;
 use App\Model\Entity\User;
 use App\Model\Entity\VideoGame;
 use App\Rating\CalculateAverageRating;
 use App\Rating\CountRatingsPerValue;
-use DateTimeImmutable;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Generator;
-use App\Model\Entity\Tag;
-use App\Model\Entity\Review;
-
-
-
-use function array_fill_callback;
 
 /**
  * Crée 50 jeux vidéo avec des tags et des reviews aléatoires.
@@ -27,8 +24,9 @@ final class VideoGameFixtures extends Fixture implements DependentFixtureInterfa
     public function __construct(
         private readonly Generator $faker,
         private readonly CalculateAverageRating $calculateAverageRating,
-        private readonly CountRatingsPerValue $countRatingsPerValue
-    ) {}
+        private readonly CountRatingsPerValue $countRatingsPerValue,
+    ) {
+    }
 
     public function load(ObjectManager $manager): void
     {
@@ -37,17 +35,17 @@ final class VideoGameFixtures extends Fixture implements DependentFixtureInterfa
 
         // Génère 50 jeux vidéo avec des données aléatoires via Faker
         /** @var VideoGame[] $videoGames */
-        $videoGames = array_fill_callback(
+        $videoGames = \array_fill_callback(
             0,
             50,
-            fn(int $index): VideoGame => (new VideoGame)
-                ->setTitle(sprintf('Jeu vidéo %d', $index))
+            fn (int $index): VideoGame => (new VideoGame())
+                ->setTitle(\sprintf('Jeu vidéo %d', $index))
                 ->setDescription($this->faker->paragraphs(10, true))
-                ->setReleaseDate(new DateTimeImmutable())
+                ->setReleaseDate(new \DateTimeImmutable())
                 ->setTest($this->faker->paragraphs(6, true))
                 ->setRating(($index % 5) + 1)
-                ->setImageName(sprintf('video_game_%d.png', $index))
-                ->setImageSize(2_098_872)
+                ->setImageName(\sprintf('video_game_%d.png', $index))
+                ->setImageSize(2_098_872),
         );
 
         // Assigne entre 1 et 3 tags aléatoires à chaque jeu
@@ -59,7 +57,7 @@ final class VideoGameFixtures extends Fixture implements DependentFixtureInterfa
             }
         }
 
-        array_walk($videoGames, [$manager, 'persist']);
+        array_walk($videoGames, static fn (VideoGame $videoGame) => $manager->persist($videoGame));
 
         // Premier flush pour persister les jeux et leurs tags avant de créer les reviews
         $manager->flush();
@@ -67,11 +65,11 @@ final class VideoGameFixtures extends Fixture implements DependentFixtureInterfa
         // Crée des reviews pour chaque jeu et recalcule les statistiques de notation
         foreach ($videoGames as $videoGame) {
             // Sélectionne un sous-ensemble aléatoire d'utilisateurs pour noter le jeu
-            $reviewCount = rand(1, count($users));
-            $usersToReview = array_slice($users, 0, $reviewCount);
+            $reviewCount = rand(1, \count($users));
+            $usersToReview = \array_slice($users, 0, $reviewCount);
 
             foreach ($usersToReview as $user) {
-                $review = (new Review)
+                $review = (new Review())
                     ->setVideoGame($videoGame)
                     ->setUser($user)
                     ->setRating(rand(1, 5))

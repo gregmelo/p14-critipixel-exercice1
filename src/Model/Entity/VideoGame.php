@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Model\Entity;
 
-use DateTimeImmutable;
-use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -59,10 +57,10 @@ class VideoGame
     private string $description;
 
     #[Column(type: Types::DATE_IMMUTABLE)]
-    private DateTimeInterface $releaseDate;
+    private \DateTimeImmutable $releaseDate;
 
     #[Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
-    private DateTimeImmutable $updatedAt;
+    private ?\DateTimeImmutable $updatedAt = null;
 
     #[Column(type: Types::TEXT, nullable: true)]
     private ?string $test = null;
@@ -78,14 +76,14 @@ class VideoGame
     private NumberOfRatingPerValue $numberOfRatingsPerValue;
 
     /**
-     * @var Collection<Tag>
+     * @var Collection<int, Tag>
      */
     #[ManyToMany(targetEntity: Tag::class)]
     #[JoinTable(name: 'video_game_tags')]
     private Collection $tags;
 
     /**
-     * @var Collection<Review>
+     * @var Collection<int, Review>
      */
     #[OneToMany(targetEntity: Review::class, mappedBy: 'videoGame')]
     private Collection $reviews;
@@ -95,7 +93,7 @@ class VideoGame
         $this->numberOfRatingsPerValue = new NumberOfRatingPerValue();
         $this->tags = new ArrayCollection();
         $this->reviews = new ArrayCollection();
-        $this->updatedAt = new DateTimeImmutable();
+        $this->updatedAt = new \DateTimeImmutable();
     }
 
     public function getId(): ?int
@@ -108,9 +106,10 @@ class VideoGame
         return $this->title;
     }
 
-    public function setTitle(string $title): VideoGame
+    public function setTitle(string $title): self
     {
         $this->title = $title;
+
         return $this;
     }
 
@@ -124,7 +123,7 @@ class VideoGame
         $this->imageFile = $imageFile;
 
         if (null !== $imageFile) {
-            $this->updatedAt = new DateTimeImmutable();
+            $this->updatedAt = new \DateTimeImmutable();
         }
     }
 
@@ -133,9 +132,10 @@ class VideoGame
         return $this->imageFile;
     }
 
-    public function setImageName(?string $imageName): VideoGame
+    public function setImageName(?string $imageName): self
     {
         $this->imageName = $imageName;
+
         return $this;
     }
 
@@ -144,9 +144,10 @@ class VideoGame
         return $this->imageName;
     }
 
-    public function setImageSize(?int $imageSize): VideoGame
+    public function setImageSize(?int $imageSize): self
     {
         $this->imageSize = $imageSize;
+
         return $this;
     }
 
@@ -160,20 +161,22 @@ class VideoGame
         return $this->description;
     }
 
-    public function setDescription(string $description): VideoGame
+    public function setDescription(string $description): self
     {
         $this->description = $description;
+
         return $this;
     }
 
-    public function getReleaseDate(): DateTimeInterface
+    public function getReleaseDate(): \DateTimeImmutable
     {
         return $this->releaseDate;
     }
 
-    public function setReleaseDate(DateTimeInterface $releaseDate): VideoGame
+    public function setReleaseDate(\DateTimeImmutable $releaseDate): self
     {
         $this->releaseDate = $releaseDate;
+
         return $this;
     }
 
@@ -182,9 +185,10 @@ class VideoGame
         return $this->test;
     }
 
-    public function setTest(?string $test): VideoGame
+    public function setTest(?string $test): self
     {
         $this->test = $test;
+
         return $this;
     }
 
@@ -193,9 +197,10 @@ class VideoGame
         return $this->rating;
     }
 
-    public function setRating(?int $rating): VideoGame
+    public function setRating(?int $rating): self
     {
         $this->rating = $rating;
+
         return $this;
     }
 
@@ -204,9 +209,10 @@ class VideoGame
         return $this->averageRating;
     }
 
-    public function setAverageRating(?int $averageRating): VideoGame
+    public function setAverageRating(?int $averageRating): self
     {
         $this->averageRating = $averageRating;
+
         return $this;
     }
 
@@ -216,7 +222,7 @@ class VideoGame
     }
 
     /**
-     * @return Collection<Tag>
+     * @return Collection<int, Tag>
      */
     public function getTags(): Collection
     {
@@ -224,7 +230,7 @@ class VideoGame
     }
 
     /**
-     * @return Collection<Review>
+     * @return Collection<int, Review>
      */
     public function getReviews(): Collection
     {

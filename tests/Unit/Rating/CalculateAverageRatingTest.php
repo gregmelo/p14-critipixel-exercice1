@@ -76,22 +76,22 @@ final class CalculateAverageRatingTest extends TestCase
     {
         return [
             // Cas limite : aucune review → la moyenne doit être null
-            'Aucune note → null'                   => [[], null],
+            'Aucune note → null' => [[], null],
 
             // Cas simple : une seule note
-            'Une seule note de 3 → 3'              => [[3], 3],
+            'Une seule note de 3 → 3' => [[3], 3],
 
             // Moyenne exacte : (1+3+5) / 3 = 3.0 → ceil(3.0) = 3
-            'Notes [1, 3, 5] → moyenne 3'          => [[1, 3, 5], 3],
+            'Notes [1, 3, 5] → moyenne 3' => [[1, 3, 5], 3],
 
             // Moyenne exacte : (1+2+3+4+5) / 5 = 3.0 → ceil(3.0) = 3
-            'Notes [1, 2, 3, 4, 5] → moyenne 3'    => [[1, 2, 3, 4, 5], 3],
+            'Notes [1, 2, 3, 4, 5] → moyenne 3' => [[1, 2, 3, 4, 5], 3],
 
             // Arrondi supérieur : (4+5) / 2 = 4.5 → ceil(4.5) = 5
             'Notes [4, 5] → arrondi supérieur → 5' => [[4, 5], 5],
 
             // Toutes les mêmes notes : (1+1) / 2 = 1.0 → ceil(1.0) = 1
-            'Notes [1, 1] → moyenne 1'             => [[1, 1], 1],
+            'Notes [1, 1] → moyenne 1' => [[1, 1], 1],
         ];
     }
 }

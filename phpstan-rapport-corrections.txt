@@ -1,0 +1,222 @@
+============================================================
+RAPPORT DE CORRECTIONS PHPSTAN - Niveau 6
+Projet : p14-critipixel-exercice1 (Symfony 6.4 / PHP 8.2)
+Date   : 2026-04-29
+Résultat final : 0 erreur sur 42 fichiers analysés
+============================================================
+
+
+OUTILS INSTALLÉS
+----------------
+- phpstan/phpstan          v2.1.54  → Moteur d'analyse statique
+- phpstan/phpstan-symfony  v2.0.15  → Extension règles Symfony
+- phpstan/phpstan-doctrine v2.0.21  → Extension règles Doctrine
+
+Commande d'analyse :
+  vendor/bin/phpstan analyse --memory-limit=512M
+
+Fichier de configuration : phpstan.neon
+  - Niveau    : 6 (intermédiaire, recommandé)
+  - Périmètre : src/
+  - Extensions: Symfony (container XML) + Doctrine (ORM)
+
+
+ERREURS CORRIGÉES (24 au total)
+--------------------------------
+
+-----------------------------------------------------------------
+FICHIER : src/Controller/VideoGameController.php
+ERREUR  : argument.type (ligne 45)
+DESCRIPTION :
+  $this->getUser() retourne UserInterface|null, mais
+  Review::setUser() attend App\Model\Entity\User.
+  PHPStan détecte un risque d'incompatibilité de type.
+CORRECTION :
+  Ajout d'un contrôle instanceof User avant setUser().
+  Si l'utilisateur n'est pas une instance de User, une
+  LogicException est levée. C'est la correction sémantique
+  correcte : ne pas masquer l'erreur, la gérer explicitement.
+AVANT :
+  $review->setUser($this->getUser());
+APRÈS :
+  $user = $this->getUser();
+  if (!$user instanceof User) {
+      throw new \LogicException('The user must be authenticated.');
+  }
+  $review->setUser($user);
+-----------------------------------------------------------------
+
+-----------------------------------------------------------------
+FICHIER : config/helpers.php
+ERREURS : argument.type + argument.templateType (lignes 14 et 43)
+DESCRIPTION :
+  La fonction array_fill_callback() avait un template PHPDoc
+  contraint à "T of array". Les closures dans les Fixtures
+  retournent des objets (User, VideoGame), pas des tableaux.
+  PHPStan refusait donc d'inférer le type de retour.
+CORRECTION :
+  Suppression de la contrainte "of array" sur le template T.
+AVANT :
+  @template T of array
+APRÈS :
+  @template T
+-----------------------------------------------------------------
+
+-----------------------------------------------------------------
+FICHIER : src/Doctrine/DataFixtures/UserFixtures.php
+ERREUR  : argument.type (ligne 20)
+DESCRIPTION :
+  array_walk($users, [$manager, 'persist']) — PHPStan signale
+  que ObjectManager::persist() ne correspond pas à la signature
+  attendue par array_walk (callable($value, $key): mixed).
+CORRECTION :
+  Remplacement par une closure typée explicite.
+AVANT :
+  array_walk($users, [$manager, 'persist']);
+APRÈS :
+  array_walk($users, static fn(User $user) => $manager->persist($user));
+-----------------------------------------------------------------
+
+-----------------------------------------------------------------
+FICHIER : src/Doctrine/DataFixtures/VideoGameFixtures.php
+ERREURS : argument.templateType + argument.type (lignes 40 et 43)
+DESCRIPTION :
+  Même problème que helpers.php (template T of array) et même
+  problème que UserFixtures pour array_walk.
+CORRECTIONS :
+  1. Résolu par la correction de helpers.php (template T sans contrainte).
+  2. Remplacement de array_walk par une closure typée.
+AVANT :
+  array_walk($videoGames, [$manager, 'persist']);
+APRÈS :
+  array_walk($videoGames, static fn(VideoGame $vg) => $manager->persist($vg));
+-----------------------------------------------------------------
+
+-----------------------------------------------------------------
+FICHIER : src/Form/FilterType.php
+ERREURS : missingType.generics (ligne 15) + return type manquant
+DESCRIPTION :
+  1. AbstractType est une classe générique (TData). Étendre sans
+     spécifier le type générique est incomplet pour PHPStan.
+  2. configureOptions() n'avait pas de type de retour déclaré.
+CORRECTIONS :
+  1. Ajout de @extends AbstractType<Filter>
+  2. Ajout du type de retour : void
+-----------------------------------------------------------------
+
+-----------------------------------------------------------------
+FICHIER : src/Form/RegisterType.php
+ERREUR  : missingType.generics (ligne 15)
+DESCRIPTION :
+  Même problème que FilterType : AbstractType sans type générique.
+CORRECTION :
+  Ajout de @extends AbstractType<User>
+-----------------------------------------------------------------
+
+-----------------------------------------------------------------
+FICHIER : src/Form/ReviewType.php
+ERREUR  : missingType.generics (ligne 15)
+DESCRIPTION :
+  Même problème que FilterType : AbstractType sans type générique.
+CORRECTION :
+  Ajout de @extends AbstractType<Review>
+-----------------------------------------------------------------
+
+-----------------------------------------------------------------
+FICHIER : src/List/VideoGameList/Filter.php
+ERREUR  : missingType.iterableValue (ligne 36)
+DESCRIPTION :
+  setTags(array $tags) n'avait pas de type générique sur le tableau.
+  PHPStan ne pouvait pas vérifier que le contenu du tableau
+  est bien composé de Tag.
+CORRECTION :
+  Ajout de @param Tag[] $tags sur le setter.
+  Ajout de @return Tag[] sur le getter.
+-----------------------------------------------------------------
+
+-----------------------------------------------------------------
+FICHIER : src/List/VideoGameList/Pagination.php
+ERREURS : method.childReturnType + return.type + missingType.iterableValue
+          (lignes 72, 78, 105, 110)
+DESCRIPTION :
+  1. getIterator() était annoté @return Traversable<string, int>
+     mais retournait ArrayIterator($this->pages) avec des Page.
+     Le type déclaré était totalement incorrect.
+  2. getDirections() et getAllSorting() retournaient array sans
+     spécifier le type des valeurs.
+  3. @implements IteratorAggregate<Page> manquait la clé TKey.
+CORRECTIONS :
+  1. @return Traversable<int, Page>
+  2. @implements IteratorAggregate<int, Page>
+  3. @return Direction[] sur getDirections()
+  4. @return Sorting[]   sur getAllSorting()
+-----------------------------------------------------------------
+
+-----------------------------------------------------------------
+FICHIER : src/List/VideoGameList/PaginationValueResolver.php
+ERREUR  : missingType.iterableValue (ligne 17)
+DESCRIPTION :
+  resolve() déclarait : iterable (sans type de valeur).
+  PHPStan ne peut pas inférer ce que l'iterable contient.
+CORRECTION :
+  @return iterable<int, Pagination>
+-----------------------------------------------------------------
+
+-----------------------------------------------------------------
+FICHIER : src/List/VideoGameList/VideoGamesList.php
+ERREUR  : missingType.iterableValue (ligne 36)
+DESCRIPTION :
+  private array $routeParameters n'avait pas de type générique.
+CORRECTION :
+  Ajout de @var array<string, mixed>
+-----------------------------------------------------------------
+
+-----------------------------------------------------------------
+FICHIER : src/Model/Entity/VideoGame.php
+ERREURS : doctrine.columnType (×2) + missingType.generics (×4)
+          (lignes 62, 65, 85, 91, 221, 229)
+DESCRIPTION :
+  1. $releaseDate typé DateTimeInterface mais la colonne Doctrine
+     est DATE_IMMUTABLE → attend DateTimeImmutable.
+  2. $updatedAt typé DateTimeImmutable mais la colonne est nullable:true
+     → la base peut contenir NULL, le type doit être ?DateTimeImmutable.
+  3. Collections $tags et $reviews annotées Collection<Tag/Review>
+     sans spécifier la clé TKey (doit être Collection<int, Tag>).
+  4. Les getters getTags() et getReviews() avaient les mêmes
+     annotations incomplètes.
+CORRECTIONS :
+  1. DateTimeInterface  → DateTimeImmutable  (propriété + getter + setter)
+  2. DateTimeImmutable  → ?DateTimeImmutable (propriété $updatedAt)
+  3. Collection<Tag>    → Collection<int, Tag>
+     Collection<Review> → Collection<int, Review>
+  4. Idem sur les getters
+-----------------------------------------------------------------
+
+-----------------------------------------------------------------
+FICHIER : src/Security/Voter/VideoGameVoter.php
+ERREUR  : missingType.generics (ligne 10)
+DESCRIPTION :
+  La classe Voter est générique (TAttribute, TSubject).
+  Étendre sans préciser les types laisse PHPStan sans
+  information pour valider voteOnAttribute().
+CORRECTION :
+  Ajout de @extends Voter<string, VideoGame>
+  (TAttribute = string car on compare à une constante string,
+   TSubject = VideoGame car supports() vérifie instanceof VideoGame)
+-----------------------------------------------------------------
+
+
+CATÉGORIES D'ERREURS PAR TYPE
+------------------------------
+  argument.type          → 4 erreurs  (types incorrects en argument)
+  argument.templateType  → 2 erreurs  (templates PHP génériques non résolus)
+  missingType.generics   → 8 erreurs  (classes génériques sans paramètres de type)
+  missingType.iterableValue → 6 erreurs (tableaux/iterables sans type de valeur)
+  doctrine.columnType    → 2 erreurs  (incohérence type PHP / colonne Doctrine)
+  method.childReturnType → 1 erreur   (type de retour incompatible avec l'interface)
+  return.type            → 1 erreur   (type de retour incorrect)
+  Total                  → 24 erreurs
+
+============================================================
+FIN DU RAPPORT
+============================================================

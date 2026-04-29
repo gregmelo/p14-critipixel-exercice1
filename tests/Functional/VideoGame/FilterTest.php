@@ -46,12 +46,12 @@ final class FilterTest extends FunctionalTestCase
 
         // Résolution des noms de tags passés par le DataProvider en entités Tag
         $tags = array_map(
-            fn(string $name) => $tagRepository->findOneBy(['name' => $name]),
-            $tagNames
+            fn (string $name) => $tagRepository->findOneBy(['name' => $name]),
+            $tagNames,
         );
 
         // Extraction des IDs pour les passer en paramètre du formulaire HTML
-        $tagIds = array_map(fn(Tag $tag) => $tag->getId(), $tags);
+        $tagIds = array_map(fn (Tag $tag) => $tag->getId(), $tags);
 
         // Nombre de jeux répondant aux critères (logique ET : le jeu doit avoir TOUS les tags)
         $expectedTotal = $this->countGamesMatchingTags($tags);
@@ -141,11 +141,11 @@ final class FilterTest extends FunctionalTestCase
             ->groupBy('vg.id')
             ->having('COUNT(DISTINCT t.id) = :tagCount')
             ->setParameter('tags', $tags)
-            ->setParameter('tagCount', count($tags))
+            ->setParameter('tagCount', \count($tags))
             ->getQuery()
             ->getResult();
 
         // Chaque ligne correspond à un jeu distinct → count() donne le total
-        return count($result);
+        return \count($result);
     }
 }

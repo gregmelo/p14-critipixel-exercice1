@@ -24,7 +24,7 @@ class NumberOfRatingPerValue
 
     #[Column]
     private int $numberOfFive = 0;
-    
+
     public function clear(): void
     {
         $this->numberOfOne = 0;
@@ -36,7 +36,7 @@ class NumberOfRatingPerValue
 
     public function getNumberOfOne(): int
     {
-        return$this->numberOfOne;
+        return $this->numberOfOne;
     }
 
     public function increaseOne(): void
@@ -46,7 +46,7 @@ class NumberOfRatingPerValue
 
     public function getNumberOfTwo(): int
     {
-        return$this->numberOfTwo;
+        return $this->numberOfTwo;
     }
 
     public function increaseTwo(): void
@@ -56,7 +56,7 @@ class NumberOfRatingPerValue
 
     public function getNumberOfThree(): int
     {
-        return$this->numberOfThree;
+        return $this->numberOfThree;
     }
 
     public function increaseThree(): void
@@ -66,7 +66,7 @@ class NumberOfRatingPerValue
 
     public function getNumberOfFour(): int
     {
-        return$this->numberOfFour;
+        return $this->numberOfFour;
     }
 
     public function increaseFour(): void
@@ -76,7 +76,7 @@ class NumberOfRatingPerValue
 
     public function getNumberOfFive(): int
     {
-        return$this->numberOfFive;
+        return $this->numberOfFive;
     }
 
     public function increaseFive(): void

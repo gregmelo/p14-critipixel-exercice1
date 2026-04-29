@@ -20,8 +20,8 @@ final readonly class UserListener
         $user->setPassword(
             $this->passwordHasher->hashPassword(
                 $user,
-                $user->getPlainPassword()
-            )
+                $user->getPlainPassword(),
+            ),
         );
     }
 }

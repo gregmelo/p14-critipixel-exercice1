@@ -35,7 +35,6 @@ final class CountRatingsPerValueTest extends TestCase
      * @dataProvider provideRatingsAndExpectedCounts indique à PHPUnit de récupérer
      * les paramètres depuis provideRatingsAndExpectedCounts().
      * Ce test sera exécuté autant de fois qu'il y a de jeux de données.
-     *
      * @dataProvider provideRatingsAndExpectedCounts
      */
     public function testCountRatingsPerValue(array $ratings, array $expectedCounts): void

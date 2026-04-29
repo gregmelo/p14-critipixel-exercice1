@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Returns the importmap for this application.
  *
@@ -21,5 +23,5 @@ return [
     ],
     '@popperjs/core' => [
         'version' => '2.11.8',
-    ]
+    ],
 ];

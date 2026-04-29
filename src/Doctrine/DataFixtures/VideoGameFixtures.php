@@ -35,7 +35,7 @@ final class VideoGameFixtures extends Fixture implements DependentFixtureInterfa
 
         // Génère 50 jeux vidéo avec des données aléatoires via Faker
         /** @var VideoGame[] $videoGames */
-        $videoGames = \array_fill_callback(
+        $videoGames = array_fill_callback(
             0,
             50,
             fn (int $index): VideoGame => (new VideoGame())

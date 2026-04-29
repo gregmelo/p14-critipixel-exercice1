@@ -56,5 +56,6 @@ return (new PhpCsFixer\Config())
         // Cast : espace après le cast (ex: (int) $val)
         'cast_spaces' => ['space' => 'single'],
     ])
+    ->setLineEnding("\n")
     ->setFinder($finder)
 ;
